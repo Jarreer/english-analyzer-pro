@@ -1,0 +1,22 @@
+.skill-image {
+    transition: transform 0.3s ease-in-out;
+    filter: drop-shadow(0 0 0.5rem rgba(255, 255, 255, 0));
+}
+
+.skill-image:hover {
+    transform: scale(1.1);
+    animation: glow 1.5s ease-in-out infinite alternate;
+}
+
+@keyframes glow {
+    from {
+        filter: drop-shadow(0 0 0.75rem rgba(255, 255, 255, 0.8));
+    }
+    to {
+        filter: drop-shadow(0 0 1.5rem rgba(0, 172, 255, 0.8));
+    }
+}
+
+.skill {
+    text-align: center;
+}

@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Muhammad Jarreer | ML & Software Developer</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Roboto', sans-serif;
+    }
+#preloader {
+  transition: opacity 0.8s ease-in-out;
+}
+.loader-spinner {
+  animation: rotate 2s linear infinite;
+}
+.loader-spinner circle {
+  stroke-dasharray: 90, 150;
+  stroke-dashoffset: 0;
+  animation: dash 1.5s ease-in-out infinite;
+}
+@keyframes rotate {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+@keyframes dash {
+  0% {
+    stroke-dasharray: 1, 200;
+    stroke-dashoffset: 0;
+  }
+  50% {
+    stroke-dasharray: 90, 200;
+    stroke-dashoffset: -35;
+  }
+  100% {
+    stroke-dasharray: 90, 200;
+    stroke-dashoffset: -124;
+  }
+}
+@keyframes fadeOut {
+  to { opacity: 0; visibility: hidden; }
+}
+  </style>
+</head>
+<body>
+<div id="preloader" style="position:fixed;top:0;left:0;width:100%;height:100%;background:#000;display:flex;flex-direction:column;justify-content:center;align-items:center;z-index:9999;">
+  <div style="color:#0073b1;font-family:'Segoe UI',sans-serif;font-size:2rem;margin-bottom:30px;letter-spacing:2px;font-weight:bold;">Jarreer Developer</div>
+  <div style="width:320px;max-width:80vw;">
+    <div id="progress-bar-bg" style="width:100%;height:8px;background:#222;border-radius:4px;overflow:hidden;">
+      <div id="progress-bar-fill" style="width:0;height:100%;background:#0073b1;transition:width 1.5s cubic-bezier(.4,0,.2,1);"></div>
+    </div>
+  </div>
+</div>
+<script>
+(function() {
+  // Animate the progress bar fill
+  const fill = document.getElementById('progress-bar-fill');
+  setTimeout(() => {
+    fill.style.width = '100%';
+  }, 200); // slight delay for effect
+})();
+</script>
+
+  <div id="main-content" style="display:none">
+    <head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Muhammad Jarreer | ML & Software Developer</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Roboto', sans-serif;
+      background: #000;
+      color: #e0e0e0;
+      overflow-x: hidden;
+    }
+    .space-bg {
+      position: fixed;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle at center, #1a1a1a 0%, #000000 100%);
+      background-image: url('https://www.transparenttextures.com/patterns/stardust.png');
+      animation: moveStars 3600s linear infinite;
+      z-index: -1;
+      top: 0;
+      left: 0;
+    }
+    @keyframes moveStars {
+      0% { background-position: 0 0; }
+      100% { background-position: 10000px 10000px; }
+    }
+    header {
+      background: transparent;
+      padding: 100px 20px 40px;
+      text-align: center;
+      position: relative;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 3.5em;
+      font-family: 'Orbitron', sans-serif;
+      color: #e0e0e0;
+      animation: textStartup 4s ease forwards;
+      opacity: 0;
+    }
+    @keyframes textStartup {
+      0% {
+        opacity: 0;
+        filter: blur(6px);
+        transform: translateY(-20px);
+        letter-spacing: 0.3em;
+      }
+      50% {
+        opacity: 0.5;
+        filter: blur(2px);
+      }
+      100% {
+        opacity: 1;
+        filter: blur(0);
+        transform: translateY(0);
+        letter-spacing: normal;
+      }
+    }
+    header .subheading {
+      font-size: 1.2em;
+      color: #aaaaaa;
+      margin-top: 20px;
+      opacity: 0;
+      animation: fadeInSlide 2s ease-out forwards;
+      animation-delay: 4s;
+    }
+    .summary-highlight {
+      margin-top: 40px;
+      font-size: 1.1em;
+      max-width: 800px;
+      margin-left: auto;
+      margin-right: auto;
+      background: #111;
+      padding: 20px;
+      border-left: 4px solid #00bcd4;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+    }
+    @keyframes fadeInSlide {
+      0% {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    .topbar {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .logo {
+      background: #00bcd4;
+      color: #000;
+      font-weight: bold;
+      font-family: 'Orbitron';
+      font-size: 1.4em;
+      padding: 6px 10px;
+      border-radius: 8px;
+    }
+    .contacts {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      display: flex;
+      gap: 15px;
+    }
+    .contacts a {
+      color: #00bcd4;
+      font-size: 1.2em;
+      transition: color 0.3s ease, transform 0.3s ease;
+    }
+    .contacts a:hover {
+      color: #26c6da;
+      animation: project-shake 0.5s infinite;
+    }
+    nav {
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      background: #111;
+      padding: 14px 0;
+    }
+    nav a {
+      color: #b0bec5;
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.3s ease;
+    }
+    nav a:hover {
+      color: #00bcd4;
+    }
+    section {
+      padding: 60px 20px;
+      max-width: 1000px;
+      margin: auto;
+    }
+    h2 {
+      color: #00bcd4;
+      font-size: 2em;
+      margin-bottom: 20px;
+    }
+    .project-gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+    }
+    .project {
+      background: linear-gradient(135deg, #1c1c1c, #2c2c2c);
+      border: 1px solid #333;
+      padding: 0;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.6);
+      position: relative;
+    }
+    .project:hover {
+      animation: project-shake 0.5s infinite;
+      box-shadow: 0 8px 35px rgba(0,0,0,0.8);
+    }
+
+    @keyframes project-shake {
+      0% { transform: translateY(-6px) rotate(0deg); }
+      25% { transform: translateY(-6px) rotate(1deg); }
+      50% { transform: translateY(-6px) rotate(0eg); }
+      75% { transform: translateY(-6px) rotate(-1deg); }
+      100% { transform: translateY(-6px) rotate(0deg); }
+    }
+    .project img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+    }
+    .project-content {
+      padding: 20px;
+      background: #121212;
+      text-align: left;
+    }
+    .project-content h3 {
+      margin-top: 0;
+      color: #00e5ff;
+      font-size: 1.4em;
+    }
+    .project-content p {
+      color: #cccccc;
+      font-size: 0.95em;
+      line-height: 1.5em;
+    }
+    .project-content a.btn {
+      display: inline-block;
+      margin-top: 12px;
+      padding: 10px 18px;
+      font-size: 0.95em;
+      background-color: #00bcd4;
+      color: #000;
+      text-decoration: none;
+      border-radius: 6px;
+      transition: background-color 0.3s ease;
+    }
+    .project-content a.btn:hover {
+      background-color: #26c6da;
+    }
+    .download-btn {
+      display: inline-block;
+      margin: 40px auto;
+      padding: 12px 24px;
+      background: #00bcd4;
+      color: #000;
+      font-weight: bold;
+      border-radius: 8px;
+      text-align: center;
+      text-decoration: none;
+      transition: background 0.3s ease;
+    }
+    .download-btn:hover {
+      background: #26c6da;
+    }
+    footer {
+      text-align: center;
+      padding: 30px 20px;
+      background: #1c1c1c;
+      font-size: 0.9em;
+      color: #757575;
+    }
+    a {
+      color: #4dd0e1;
+    }
+    a:hover {
+      color: #26c6da;
+    }
+    .skills-gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 20px;
+      justify-items: center;
+    }
+    .skill-item {
+      text-align: center;
+      transition: transform 0.3s ease;
+    }
+    .skill-item:hover {
+      transform: scale(1.1);
+    }
+    .skill-item img {
+      width: 60px;
+      height: 60px;
+      filter: drop-shadow(0 0 5px rgba(0, 188, 212, 0));
+      transition: filter 0.3s ease;
+    }
+    .skill-item:hover img {
+      animation: glow 1.5s ease-in-out infinite alternate;
+    }
+    @keyframes glow {
+      from {
+        filter: drop-shadow(0 0 10px rgba(0, 188, 212, 0.8));
+      }
+      to {
+        filter: drop-shadow(0 0 20px rgba(0, 229, 255, 1));
+      }
+    }
+    .skill-item p {
+      margin-top: 10px;
+      color: #b0bec5;
+    }
+    .about-container {
+      display: flex;
+      align-items: center;
+      gap: 30px;
+    }
+    .profile-pic {
+      width: 150px;
+      height: 150px;
+      border-radius: 10px;
+      border: 3px solid #00bcd4;
+      box-shadow: 0 0 15px rgba(0, 188, 212, 0.7);
+    }
+  </style>
+</head>
+<body>
+  <div class="space-bg"></div>
+  <header>
+    <div class="topbar">
+      <div class="logo">J</div>
+    </div>
+    <div class="contacts">
+      <a href="mailto:jareerfootball7@gmail.com" title="Email"><i class="fas fa-envelope"></i></a>
+      <a href="https://wa.me/923343323656" title="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+      <a href="https://github.com/Jarreer" title="GitHub"><i class="fab fa-github"></i></a>
+    </div>
+    <h1>Hi, I'm Muhammad Jarreer</h1>
+    <p class="subheading">Machine Learning Enthusiast | Python & C# Developer</p>
+    <div class="summary-highlight">
+      🚀 Passionate about solving real-world problems with intelligent systems. Adept at clean code, scalable architectures, and data-driven decisions.
+    </div>
+  </header>
+
+  <nav>
+    <a href="#about">About</a>
+    <a href="#projects">Projects</a>
+    <a href="#skills">Skills</a>
+    <a href="#contact">Contact</a>
+  </nav>
+
+  <section id="about">
+    <h2>About Me</h2>
+    <div class="about-container">
+      <img src="assets/images/profile.png" alt="Muhammad Jarreer" class="profile-pic" style="object-fit:cover;width:150px;height:150px;border-radius:10px;border:3px solid #00bcd4;box-shadow:0 0 15px rgba(0,188,212,0.7);">
+      <div class="about-text">
+        <p>
+      I'm <strong>Muhammad Jarreer</strong>, a dedicated Machine Learning developer with advanced Python knowledge and strong experience in C#.
+      I specialize in building data-driven solutions, optimizing algorithms, and creating high-quality software with clean architecture.
+    </p>
+    <p>
+      My goal is to bridge the gap between technology and real-world utility, delivering efficient and meaningful applications.
+        </p>
+        <a class="download-btn" href="Jarreer_Resume.pdf" download>⬇ Download Resume</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3D Model Loader for retro_computer.glb above About Section -->
+<div id="retro-pc-3d" style="width:100%;max-width:900px;height:520px;margin:0 auto 0 auto;position:relative;top:-40px;"></div>
+
+  <section id="skills">
+    <h2>Skills</h2>
+    <div class="skills-gallery">
+      <div class="skill-item"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg" alt="Python"><p>Python</p></div>
+      <div class="skill-item"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/django/django-plain.svg" alt="Django"><p>Django</p></div>
+      <div class="skill-item"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/flask/flask-original-wordmark.svg" alt="Flask"><p>Flask</p></div>
+      <div class="skill-item"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg" alt="JavaScript"><p>JavaScript</p></div>
+      <div class="skill-item"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original-wordmark.svg" alt="React"><p>React</p></div>
+      <div class="skill-item"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodejs/nodejs-original.svg" alt="Node.js"><p>Node.js</p></div>
+      <div class="skill-item"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nextjs/nextjs-original-wordmark.svg" alt="Next.js"><p>Next.js</p></div>
+      <div class="skill-item"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/docker/docker-original.svg" alt="Docker"><p>Docker</p></div>
+      <div class="skill-item"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/postgresql/postgresql-original.svg" alt="PostgreSQL"><p>PostgreSQL</p></div>
+      <div class="skill-item"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/html5/html5-original.svg" alt="HTML5"><p>HTML5</p></div>
+      <div class="skill-item"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/css3/css3-original.svg" alt="CSS3"><p>CSS3</p></div>
+      <div class="skill-item"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/git/git-original.svg" alt="Git"><p>Git</p></div>
+      <div class="skill-item"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/linux/linux-original.svg" alt="Linux"><p>Linux</p></div>
+      <div class="skill-item"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/csharp/csharp-original.svg" alt="C#"><p>C#</p></div>
+    </div>
+  </section>
+
+  <section id="projects">
+    <h2>Projects</h2>
+    <div class="project-gallery">
+      <div class="project">
+        <img src="https://via.placeholder.com/400x200?text=House+Price+Predictor" alt="House Price Predictor Preview">
+        <div class="project-content">
+          <h3>🏠 House Price Predictor</h3>
+          <p>A regression-based ML model using Python and Scikit-learn to predict house prices based on features like location, size, and condition. This project is deployed live with an interactive interface for real-time predictions.</p>
+          <a class="btn" href="https://house-price-predictor-pk-ftdtmqfxmqd5rvzuezjykc.streamlit.app/#karachi-house-price-predictor" target="_blank">View Live Project</a>
+        </div>
+      </div>
+      <div class="project">
+      <img src="https://via.placeholder.com/400x200?text=Resume+Screener" alt="Smart Resume Screener Preview">
+      <div class="project-content">
+        <h3>📄 Smart Resume Screener</h3>
+        <p>An intelligent resume analysis tool that uses machine learning and GPT-based summarization to evaluate resumes, extract skills, and score candidates. Supports PDF uploads and provides recruiter-friendly outputs.</p>
+        <a class="btn" href="https://smart-resume-screener-a8awrcndc99f9jzkpvntot.streamlit.app/" target="_blank">View Live Project</a>
+      </div>
+    </div>
+    </div>
+  </section>
+
+  <section id="contact">
+    <h2>Contact</h2>
+    <p>
+      Let's connect and collaborate on exciting tech ideas.
+    </p>
+    <p>
+      📧 <a href="mailto:jareerfootball7@gmail.com">jareerfootball7@gmail.com</a><br>
+      💻 <a href="https://github.com/Jarreer" target="_blank">github.com/Jarreer</a><br>
+      📞 <a href="https://wa.me/923343323656" target="_blank">+92 334 3323656 (WhatsApp)</a>
+    </p>
+  </section>
+
+  <footer>
+    <p>Made with <span style="color: #e25555;">&hearts;</span> by Jarreer</p>
+    &copy; 2025 Muhammad Jarreer &mdash; Machine Learning Developer | Clean Code Advocate
+  </footer>
+
+  <script>
+    const projectCards = document.querySelectorAll('.project');
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, {
+      threshold: 0.1
+    });
+
+    projectCards.forEach(card => {
+      observer.observe(card);
+    });
+  </script>
+  </div>
+
+<script>
+window.addEventListener('load', () => {
+  const loader = document.getElementById('preloader');
+  const mainContent = document.getElementById('main-content');
+  
+  setTimeout(() => {
+    loader.style.opacity = '0';
+    loader.addEventListener('transitionend', () => {
+      loader.style.display = 'none';
+      mainContent.style.display = 'block';
+    });
+  }, 2000);
+});
+</script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.152.2/build/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.152.2/examples/js/loaders/GLTFLoader.js"></script>
+<script>
+(function() {
+  const container = document.getElementById('retro-pc-3d');
+  if (!container) return;
+  const width = container.offsetWidth || 900;
+  const height = container.offsetHeight || 520;
+  const scene = new THREE.Scene();
+  // Transparent background
+  const camera = new THREE.PerspectiveCamera(45, width/height, 0.1, 1000);
+  camera.position.set(0, 2, 8);
+  const renderer = new THREE.WebGLRenderer({antialias:true,alpha:true});
+  renderer.setClearColor(0x000000, 0); // transparent
+  renderer.setSize(width, height);
+  container.appendChild(renderer.domElement);
+  // Lighting
+  const ambient = new THREE.AmbientLight(0xffffff, 1.1);
+  scene.add(ambient);
+  const dirLight = new THREE.DirectionalLight(0xffffff, 1.0);
+  dirLight.position.set(5, 10, 7);
+  scene.add(dirLight);
+  // Load GLB model
+  const loader = new THREE.GLTFLoader();
+  loader.load('assets/retro-computer/retro_computer.glb', function(gltf) {
+    const model = gltf.scene;
+    model.position.set(0, -0.5, 0);
+    model.scale.set(3.5, 3.5, 3.5);
+    scene.add(model);
+    // Mouse/touch rotation
+    let rotY = 0;
+    let isDragging = false, lastX = 0;
+    renderer.domElement.addEventListener('mousedown', e => { isDragging = true; lastX = e.clientX; });
+    renderer.domElement.addEventListener('mouseup', () => { isDragging = false; });
+    renderer.domElement.addEventListener('mouseleave', () => { isDragging = false; });
+    renderer.domElement.addEventListener('mousemove', e => {
+      if (!isDragging) return;
+      const dx = e.clientX - lastX;
+      rotY += dx * 0.01;
+      model.rotation.y = rotY;
+      lastX = e.clientX;
+    });
+    renderer.domElement.addEventListener('touchstart', e => { isDragging = true; lastX = e.touches[0].clientX; });
+    renderer.domElement.addEventListener('touchend', () => { isDragging = false; });
+    renderer.domElement.addEventListener('touchmove', e => {
+      if (!isDragging) return;
+      const dx = e.touches[0].clientX - lastX;
+      rotY += dx * 0.01;
+      model.rotation.y = rotY;
+      lastX = e.touches[0].clientX;
+    });
+    // Slow auto-rotation
+    function animate() {
+      if (!isDragging) {
+        rotY += 0.0025;
+        model.rotation.y = rotY;
+      }
+      renderer.render(scene, camera);
+      requestAnimationFrame(animate);
+    }
+    animate();
+  }, undefined, function(error) {
+    console.error('Error loading GLB model:', error);
+  });
+})();
+</script>
+<!-- Glowing Cursor/Scroll Effect (Multi Dark Colors) -->
+<div id="glow-cursor" style="position:fixed;top:0;left:0;width:100vw;height:100vh;pointer-events:none;z-index:99999;"><div id="glow-circle" style="position:absolute;width:160px;height:160px;border-radius:50%;background:radial-gradient(circle,rgba(30,30,60,0.38) 0%,rgba(0,0,0,0.0) 80%);filter:blur(32px);mix-blend-mode:screen;transition:background 0.3s,opacity 0.3s;"></div></div>
+<script>
+(function() {
+  const glow = document.getElementById('glow-cursor');
+  const circle = document.getElementById('glow-circle');
+  let mouseX = window.innerWidth/2, mouseY = window.innerHeight/2;
+  let targetX = mouseX, targetY = mouseY;
+  let colorPhase = 0;
+  // Mouse move
+  document.addEventListener('mousemove', e => {
+    targetX = e.clientX - 80;
+    targetY = e.clientY - 80;
+  });
+  // Touch move
+  document.addEventListener('touchmove', e => {
+    if (e.touches.length > 0) {
+      targetX = e.touches[0].clientX - 80;
+      targetY = e.touches[0].clientY - 80;
+    }
+  });
+  // Animate position and color
+  function animate() {
+    mouseX += (targetX - mouseX) * 0.18;
+    mouseY += (targetY - mouseY) * 0.18;
+    circle.style.transform = `translate3d(${mouseX}px,${mouseY}px,0)`;
+    // Multi dark color cycling
+    colorPhase += 0.008;
+    // Generate dark HSL colors cycling through hue
+    const hue = (220 + 80 * Math.sin(colorPhase * 2)) % 360;
+    const hue2 = (hue + 40) % 360;
+    const color1 = `hsla(${hue}, 40%, 18%, 0.45)`;
+    const color2 = `hsla(${hue2}, 40%, 10%, 0.0)`;
+    circle.style.background = `radial-gradient(circle,${color1} 0%,${color2} 80%)`;
+    requestAnimationFrame(animate);
+  }
+  animate();
+  // Scroll glow up effect
+  let lastScroll = window.scrollY;
+  window.addEventListener('scroll', () => {
+    const scrollDelta = Math.abs(window.scrollY - lastScroll);
+    lastScroll = window.scrollY;
+    // Animate glow intensity on scroll
+    circle.style.opacity = '0.8';
+    setTimeout(() => {
+      circle.style.opacity = '0.38';
+    }, 350);
+  });
+})();
+</script>
+</body>
+</html>

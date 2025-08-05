@@ -1,0 +1,78 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual Environment
+venv/
+env/
+ENV/
+
+# Database files
+*.db
+*.sqlite
+*.sqlite3
+user_results.db
+
+# Audio files
+*.wav
+*.mp3
+*.flac
+live_input.wav
+live_input_16k.wav
+temp.wav
+
+# Temporary files
+*.tmp
+*.temp
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Streamlit
+.streamlit/
+
+# Logs
+*.log
+
+# Model files (if any)
+*.pkl
+*.joblib
+
+# Data files
+data/
+*.json
+scores.json
+
+# PDF files
+*.pdf
+Jarreer_Resume.pdf
+
+# Cache
+.cache/
+*.cache 
