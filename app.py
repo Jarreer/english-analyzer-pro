@@ -450,7 +450,7 @@ def get_user_history(username):
         except sqlite3.OperationalError:
             try:
                 # Fallback to intermediate schema
-            return conn.execute("SELECT date, grammar, vocab, speed, pronunciation, confidence, topic, difficulty FROM user_results WHERE username = ?", (username,)).fetchall()
+                return conn.execute("SELECT date, grammar, vocab, speed, pronunciation, confidence, topic, difficulty FROM user_results WHERE username = ?", (username,)).fetchall()
         except sqlite3.OperationalError:
             # Fallback to old schema if new columns don't exist
             return conn.execute("SELECT date, grammar, vocab, speed FROM user_results WHERE username = ?", (username,)).fetchall()
