@@ -451,9 +451,9 @@ def get_user_history(username):
             try:
                 # Fallback to intermediate schema
                 return conn.execute("SELECT date, grammar, vocab, speed, pronunciation, confidence, topic, difficulty FROM user_results WHERE username = ?", (username,)).fetchall()
-        except sqlite3.OperationalError:
-            # Fallback to old schema if new columns don't exist
-            return conn.execute("SELECT date, grammar, vocab, speed FROM user_results WHERE username = ?", (username,)).fetchall()
+            except sqlite3.OperationalError:
+                # Fallback to old schema if new columns don't exist
+                return conn.execute("SELECT date, grammar, vocab, speed FROM user_results WHERE username = ?", (username,)).fetchall()
 
 def get_leaderboard():
     with create_connection() as conn:
@@ -482,10 +482,10 @@ def get_leaderboard():
                 ORDER BY (avg_grammar + avg_vocab + avg_pronunciation) / 3 DESC
                 LIMIT 10
             """).fetchall()
-        except sqlite3.OperationalError:
-            # Fallback to old schema without pronunciation
-            return conn.execute("""
-                SELECT username, AVG(grammar) as avg_grammar, AVG(vocab) as avg_vocab, 
+            except sqlite3.OperationalError:
+                # Fallback to old schema without pronunciation
+                return conn.execute("""
+                    SELECT username, AVG(grammar) as avg_grammar, AVG(vocab) as avg_vocab, 
                            AVG(speed) as avg_speed, 0 as avg_pronunciation, 0 as avg_ielts_band,
                        COUNT(*) as attempts
                 FROM user_results 
