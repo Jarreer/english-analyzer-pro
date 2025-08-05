@@ -1232,27 +1232,27 @@ with col1:
 
         with st.spinner("Analyzing your speech..."):
             try:
-                    # Show comprehensive analysis message
-                    st.info("🔍 **Comprehensive Analysis in Progress**")
-                    st.markdown("""
-                    **Please wait 20-30 seconds** for our AI to analyze:
-                    • 🎤 Pronunciation & accent detection
-                    • 📝 Grammar & vocabulary assessment  
-                    • 😊 Speaking confidence & emotion
-                    • 🏆 IELTS band scoring
-                    • 💡 Advanced language features
-                    • 📊 Detailed performance metrics
-                    """)
-                    
-                    # Show progress steps
-                    progress_bar = st.progress(0)
-                    st.text("Step 1/5: Processing audio...")
-                    progress_bar.progress(20)
-                    
+                # Show comprehensive analysis message
+                st.info("🔍 **Comprehensive Analysis in Progress**")
+                st.markdown("""
+                **Please wait 20-30 seconds** for our AI to analyze:
+                • 🎤 Pronunciation & accent detection
+                • 📝 Grammar & vocabulary assessment  
+                • 😊 Speaking confidence & emotion
+                • 🏆 IELTS band scoring
+                • 💡 Advanced language features
+                • 📊 Detailed performance metrics
+                """)
+                
+                # Show progress steps
+                progress_bar = st.progress(0)
+                st.text("Step 1/5: Processing audio...")
+                progress_bar.progress(20)
+                
                 process_and_display_results(recording)
-                    
-                    progress_bar.progress(100)
-                    st.success("✅ **Analysis Complete!**")
+                
+                progress_bar.progress(100)
+                st.success("✅ **Analysis Complete!**")
                 
                 # Auto-advance content if enabled
                 if st.session_state.get("auto_advance", False):
@@ -1265,8 +1265,8 @@ with col1:
                         st.success("🔄 Content auto-advanced for next practice!")
                     
             except Exception as e:
-                    st.error(f"❌ Analysis failed: {str(e)}")
-                    st.info("💡 Try speaking more clearly or check your microphone settings")
+                st.error(f"❌ Analysis failed: {str(e)}")
+                st.info("💡 Try speaking more clearly or check your microphone settings")
 
 with col2:
     if st.button("🔄 New Content", key="new_content_button"):
