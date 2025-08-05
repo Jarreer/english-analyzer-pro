@@ -1,149 +1,270 @@
 # 🎤 English Analyzer Pro
 
-**THE ONLY PAGE YOU NEED TO IMPROVE YOUR ENGLISH. WELCOME TO THE FULLY AI AUTOMATED IELTS LEVEL ENGLISH ENHANCER.**
+**AI-powered English speaking analyzer with IELTS-level assessment and real-time feedback**
 
-## 🌟 Features
+[![Status](https://img.shields.io/badge/Status-Live-green?style=for-the-badge)](https://your-streamlit-app-url.streamlit.app/)
+[![Python](https://img.shields.io/badge/Python-3.8+-blue?style=for-the-badge&logo=python)](https://python.org)
+[![Streamlit](https://img.shields.io/badge/Streamlit-1.28+-red?style=for-the-badge&logo=streamlit)](https://streamlit.io)
+[![AI/ML](https://img.shields.io/badge/AI/ML-Powered-orange?style=for-the-badge&logo=tensorflow)](https://tensorflow.org)
 
-### 🎯 **Advanced Language Analysis**
-- **Idiomatic Expressions**: Detect and score use of idioms/phrasal verbs
-- **Academic Vocabulary**: Identify academic vs. everyday vocabulary
-- **Complex Sentence Structures**: Analyze compound/complex sentences
-- **Discourse Markers**: Score use of transition words and connectors
-- **Register Analysis**: Formal vs. informal language detection
+## 🚀 Features
+
+### 🎤 **Real-time Audio Analysis**
+- Record and analyze spoken English instantly
+- Advanced pronunciation assessment with accent detection
+- Speaking confidence and emotion analysis
+- Real-time feedback during recording
 
 ### 🏆 **IELTS Band Scoring**
-- **Professional Assessment**: IELTS band scoring (0-9)
-- **CEFR Level**: International standard evaluation
-- **Detailed Feedback**: Specific improvement tips for each band
-- **Weighted Scoring**: Multi-criteria evaluation system
+- Comprehensive IELTS-level assessment
+- Detailed band scoring (1-9) with descriptors
+- Grammar, vocabulary, pronunciation evaluation
+- Fluency and coherence analysis
+- Task achievement assessment
 
-### 🎤 **Speaking Analysis**
-- **Pronunciation Analysis**: Advanced accent detection and improvement
-- **Speaking Confidence**: Emotion and confidence level analysis
-- **Fluency Assessment**: Speed, rhythm, and natural flow evaluation
-- **Real-time Feedback**: Volume monitoring during recording
+### 📝 **Advanced Language Analysis**
+- **Grammar Analysis**: Real-time grammar checking and scoring
+- **Vocabulary Assessment**: Word variety and complexity analysis
+- **Pronunciation Scoring**: Audio-based pronunciation evaluation
+- **Speaking Speed**: Words per minute (WPM) measurement
+- **Idiomatic Expressions**: Detection and scoring of idioms usage
+- **Academic Vocabulary**: Academic vs. everyday vocabulary analysis
+- **Discourse Markers**: Analysis of language flow and coherence
+- **Register Analysis**: Formal vs. informal language detection
 
-### 📊 **Progress Tracking**
-- **Historical Analysis**: Track improvement over time
-- **Performance Charts**: Visual progress indicators
-- **Leaderboard System**: Compare with other users
-- **Personal Statistics**: Detailed performance metrics
+### 😊 **Speaking Confidence Detection**
+- Emotion analysis using AI models
+- Confidence level assessment
+- Speaking energy and engagement analysis
+- Personalized confidence feedback
 
-### 📚 **Educational Content**
-- **Topic-based Practice**: Business, technology, education, and more
-- **Difficulty Levels**: Beginner to advanced content
-- **Interactive Exercises**: Speaking challenges and tasks
-- **Custom Practice**: Use your own text for analysis
+### 📊 **Progress Tracking & Analytics**
+- Historical performance tracking
+- Detailed progress charts and visualizations
+- Performance comparison over time
+- Leaderboard system for motivation
+- Comprehensive statistics dashboard
 
-## 🚀 **Quick Start**
+### 📄 **Professional Reports**
+- Detailed PDF analysis reports
+- Audio summaries using text-to-speech
+- Exportable performance data
+- Customizable report formats
+
+### 🔐 **User Management**
+- Secure user authentication system
+- Individual user profiles and progress
+- Session management and data persistence
+- Privacy-focused data handling
+
+### 🎯 **Interactive Learning**
+- Topic-based practice sessions
+- Multiple difficulty levels (Beginner to Advanced)
+- Interactive exercises and tongue twisters
+- Custom text input for personalized practice
+- Real-time content suggestions
+
+## 🛠️ Technology Stack
+
+### **Frontend & UI**
+- **Streamlit** - Interactive web application framework
+- **HTML/CSS** - Custom styling and responsive design
+- **Matplotlib** - Data visualization and charts
+
+### **Backend & Processing**
+- **Python 3.8+** - Core programming language
+- **SQLite** - Lightweight database for user data
+- **NumPy** - Numerical computing and array operations
+- **Pandas** - Data manipulation and analysis
+
+### **AI & Machine Learning**
+- **scikit-learn** - Machine learning algorithms
+- **librosa** - Audio and music analysis
+- **NLTK** - Natural language processing
+- **Joblib** - Model serialization and loading
+
+### **Audio Processing**
+- **sounddevice** - Real-time audio recording
+- **soundfile** - Audio file handling
+- **speech_recognition** - Speech-to-text conversion
+- **gTTS** - Text-to-speech synthesis
+
+### **Security & Authentication**
+- **bcrypt** - Password hashing and security
+- **SQLite** - Secure user data storage
+
+### **Documentation & Reports**
+- **FPDF** - PDF report generation
+- **requests** - External API integration
+
+## 🎯 Live Demo
+
+[Try the English Analyzer Pro](https://your-streamlit-app-url.streamlit.app/)
+
+## 📸 Screenshots
+
+### Main Dashboard
+![Dashboard](assets/images/dashboard.png)
+
+### Analysis Results
+![Analysis](assets/images/analysis.png)
+
+### Progress Tracking
+![Progress](assets/images/progress.png)
+
+## 🚀 Quick Start
 
 ### Prerequisites
+- Python 3.8 or higher
+- Microphone access (for audio recording)
+- Internet connection (for external APIs)
+
+### Installation
+
+1. **Clone the repository**
+```bash
+git clone https://github.com/Jarreer/english-analyzer-pro.git
+cd english-analyzer-pro
+```
+
+2. **Install dependencies**
 ```bash
 pip install -r requirements.txt
 ```
 
-### Run Locally
+3. **Run the application**
 ```bash
 streamlit run app.py
 ```
 
-### Deploy to Streamlit Cloud
-1. Push your code to GitHub
-2. Connect your repository to [Streamlit Cloud](https://share.streamlit.io/)
-3. Deploy with one click!
+4. **Open your browser**
+Navigate to `http://localhost:8501`
 
-## 🛠️ **Technology Stack**
-
-- **Frontend**: Streamlit
-- **Backend**: Python
-- **Audio Processing**: librosa, sounddevice, speech_recognition
-- **AI/ML**: scikit-learn, NLTK
-- **Database**: SQLite
-- **Authentication**: bcrypt
-- **Reports**: FPDF, gTTS
-
-## 📋 **Requirements**
+## 📊 Project Structure
 
 ```
-streamlit
-numpy
-librosa
-soundfile
-scikit-learn
-matplotlib
-joblib
-speechrecognition
-sounddevice
-requests
-fpdf
-gTTS
-bcrypt
-pydub
-phonemizer
-pyphen
-pandas
+emotion_app/
+├── app.py                     # Main Streamlit application
+├── requirements.txt           # Python dependencies
+├── README.md                 # Project documentation
+├── utils/                    # Utility modules
+│   ├── pronunciation_analyzer.py    # Audio and pronunciation analysis
+│   ├── emotion_integration.py       # Emotion and confidence detection
+│   ├── content_manager.py           # Content and exercise management
+│   └── extract_features.py          # Feature extraction utilities
+├── model/                    # Machine learning models
+│   ├── emotion_model.pkl     # Pre-trained emotion detection model
+│   └── train_model.py        # Model training script
+├── assets/                   # Static assets
+│   ├── css/                  # Custom stylesheets
+│   │   ├── style.css
+│   │   └── space.css
+│   ├── js/                   # JavaScript files
+│   │   └── space.js
+│   └── images/               # Images and icons
+│       └── profile.png
+├── data/                     # Data storage
+└── venv/                     # Virtual environment (not included in repo)
 ```
 
-## 🎯 **How It Works**
+## 🎓 Key Features Explained
 
-1. **Record Your Speech**: Use the built-in recording feature
-2. **AI Analysis**: Advanced algorithms analyze pronunciation, grammar, and fluency
-3. **Comprehensive Feedback**: Get detailed scores and improvement tips
-4. **Progress Tracking**: Monitor your improvement over time
-5. **Export Reports**: Download PDF reports and audio summaries
+### **IELTS Band Scoring System**
+The app implements a comprehensive IELTS scoring system that evaluates:
+- **Grammar** (25% weight): Sentence structure, tense usage, agreement
+- **Vocabulary** (20% weight): Word variety, complexity, appropriateness
+- **Pronunciation** (20% weight): Clarity, accent, intonation
+- **Fluency** (15% weight): Speaking speed, hesitation, flow
+- **Coherence** (10% weight): Logical organization, discourse markers
+- **Task Achievement** (10% weight): Response relevance and completeness
 
-## 📊 **Analysis Features**
+### **Advanced Language Analysis**
+- **Idiomatic Expressions**: Detects and scores usage of common English idioms
+- **Academic Vocabulary**: Analyzes formal vs. informal language usage
+- **Complexity Analysis**: Evaluates sentence structure complexity
+- **Discourse Markers**: Identifies language flow and coherence indicators
+- **Register Analysis**: Determines formal vs. informal communication style
 
-### Basic Metrics
-- **Grammar Score**: Sentence structure accuracy
-- **Vocabulary Score**: Word variety and complexity
-- **Speed (WPM)**: Words per minute
-- **CEFR Level**: International standard assessment
+### **Real-time Audio Processing**
+- **Pitch Analysis**: Evaluates intonation and speaking patterns
+- **Energy Detection**: Measures speaking energy and engagement
+- **Spectral Features**: Analyzes audio quality and clarity
+- **Stress Pattern Analysis**: Evaluates word stress and emphasis
 
-### Advanced Metrics
-- **IELTS Band**: Professional scoring system
-- **Pronunciation**: Accent detection and improvement
-- **Speaking Confidence**: Emotion and energy analysis
-- **Idiom Usage**: Detection of idiomatic expressions
-- **Academic Vocabulary**: Formal language assessment
-- **Discourse Markers**: Transition word analysis
+## 🔧 Configuration
 
-## 🏆 **IELTS Band System**
+### **Environment Variables**
+```bash
+# Optional: Set custom database path
+DATABASE_PATH=user_results.db
 
-- **Band 9**: Expert user - Native-like proficiency
-- **Band 8**: Very good user - Fully operational command
-- **Band 7**: Good user - Operational command with minor inaccuracies
-- **Band 6**: Competent user - Generally effective command
-- **Band 5**: Modest user - Partial command
-- **Band 4**: Limited user - Basic competence
-- **Band 3**: Extremely limited user - General meaning only
-- **Band 2**: Intermittent user - No real communication
-- **Band 1**: Non-user - No ability to use language
+# Optional: Set custom model paths
+EMOTION_MODEL_PATH=model/emotion_model.pkl
+```
 
-## 📈 **Progress Tracking**
+### **Customization Options**
+- Modify `utils/content_manager.py` to add new topics and exercises
+- Adjust scoring weights in `app.py` for different assessment criteria
+- Customize UI styling in `assets/css/style.css`
 
-- **Historical Charts**: Visual progress over time
-- **Performance Metrics**: Detailed statistics
-- **Leaderboard**: Compare with other users
-- **Personal Dashboard**: Custom statistics and insights
+## 📈 Performance Metrics
 
-## 🔧 **Customization**
+The app tracks comprehensive performance metrics including:
+- **Grammar Score**: 0-100% accuracy
+- **Vocabulary Score**: 0-100% variety and complexity
+- **Pronunciation Score**: 0-100% clarity and accent
+- **Speaking Speed**: Words per minute (WPM)
+- **Confidence Score**: 0-100% speaking confidence
+- **IELTS Band**: 1-9 band score
+- **CEFR Level**: A1-C2 proficiency levels
 
-- **Recording Duration**: Adjustable 5-15 seconds
-- **Content Topics**: Multiple practice categories
-- **Difficulty Levels**: Beginner to advanced
-- **Exercise Types**: Various speaking challenges
+## 🎓 About the Developer
 
-## 📞 **Support**
+**Muhammad Jarreer** - AI Engineer & Python Developer
 
-- **Built by**: Muhammad Jarreer
-- **Portfolio**: [jarreer.github.io/portfolio/](https://jarreer.github.io/portfolio/)
-- **Contact**: jareerfootball7@gmail.com
+- 🔗 [Portfolio](https://jarreer.github.io/portfolio/)
+- 📧 [Email](mailto:jareerfootball7@gmail.com)
+- 💼 [LinkedIn](https://linkedin.com/in/your-profile)
+- 🐙 [GitHub](https://github.com/Jarreer)
 
-## 📄 **License**
+### **Expertise**
+- **AI/ML Development**: Building intelligent tools that enhance real-world productivity
+- **NLP & Speech Processing**: Specialized in natural language understanding and audio analysis
+- **Streamlit Applications**: Creating beautiful, interactive data science applications
+- **Full-Stack Development**: End-to-end application development
 
-© 2025 Muhammad Jarreer — All Rights Reserved
+## 🤝 Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+### **How to Contribute**
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🙏 Acknowledgments
+
+- **Streamlit** for the amazing web app framework
+- **OpenAI** for inspiration in AI-powered applications
+- **NLTK** for natural language processing capabilities
+- **librosa** for audio analysis features
+- **scikit-learn** for machine learning algorithms
+
+## 📞 Support
+
+If you have any questions or need support:
+- 📧 Email: jareerfootball7@gmail.com
+- 🐙 GitHub Issues: [Create an issue](https://github.com/Jarreer/english-analyzer-pro/issues)
+- 📖 Documentation: Check the code comments and docstrings
 
 ---
 
-**🎤 Start improving your English speaking skills today with AI-powered analysis!** 
+**Built with ❤️ by Muhammad Jarreer**
+
+*"Solving real problems through clean, impactful code."* 

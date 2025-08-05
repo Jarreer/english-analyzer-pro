@@ -1,0 +1,54 @@
+[
+    {
+        "grammar": 95,
+        "vocab": 87.5,
+        "wpm": 80.0,
+        "cefr": "C2",
+        "text": "him to the market to buy fresh vegetables"
+    },
+    {
+        "grammar": 95,
+        "vocab": 100.0,
+        "wpm": 105.0,
+        "cefr": "C2",
+        "text": "he went the market to brush vegetable"
+    },
+    {
+        "grammar": 95,
+        "vocab": 83.33333333333334,
+        "wpm": 90.0,
+        "cefr": "C1",
+        "text": "him to the market to try"
+    },
+    {
+        "grammar": 95,
+        "vocab": 87.5,
+        "wpm": 96.0,
+        "cefr": "C2",
+        "text": "event to the market to buy fresh vegetables"
+    },
+    {
+        "grammar": 86,
+        "vocab": 100.0,
+        "wpm": 85.71428571428572,
+        "accuracy": 69.66292134831461,
+        "cefr": "B1",
+        "text": "official Elegance changing world ra"
+    },
+    {
+        "grammar": 93,
+        "vocab": 100.0,
+        "wpm": 72.0,
+        "accuracy": 71.42857142857143,
+        "cefr": "B2",
+        "text": "official religion is stitching world rapidly"
+    },
+    {
+        "grammar": 93,
+        "vocab": 85.71428571428571,
+        "wpm": 93.33333333333333,
+        "accuracy": 91.2621359223301,
+        "cefr": "C1",
+        "text": "artificial intelligence a changing a word rapidly"
+    }
+]
