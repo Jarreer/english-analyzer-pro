@@ -1225,7 +1225,7 @@ with col1:
         if not SOUNDDEVICE_AVAILABLE:
             st.error("❌ Audio recording is not available on this platform.")
             st.info("💡 Please use the file upload option or deploy locally for full functionality.")
-            return
+            st.stop()
         
         recording = sd.rec(int(rec_duration * fs), samplerate=fs, channels=1)
         
