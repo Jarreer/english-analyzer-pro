@@ -1,6 +1,17 @@
 import streamlit as st 
-import sounddevice as sd
 import soundfile as sf
+
+# Handle sounddevice import for cloud deployment
+try:
+    import sounddevice as sd
+    SOUNDDEVICE_AVAILABLE = True
+except OSError:
+    # PortAudio not available on Streamlit Cloud
+    SOUNDDEVICE_AVAILABLE = False
+    st.warning("🎙️ **Audio recording is not available on this platform.** Please use the file upload option below.")
+except ImportError:
+    SOUNDDEVICE_AVAILABLE = False
+    st.warning("🎙️ **Audio recording library not available.** Please use the file upload option below.")
 import numpy as np
 import speech_recognition as sr
 import tempfile
@@ -1137,6 +1148,26 @@ else:
     <small>📚 Topic: {st.session_state.current_topic.title()} | 📊 Difficulty: {st.session_state.current_difficulty.title()}</small><br>
     <i>\"{st.session_state.selected_sentence}\"</i>""", unsafe_allow_html=True)
 
+# File upload option for cloud deployment
+if not SOUNDDEVICE_AVAILABLE:
+    st.markdown("### 📁 Upload Audio File")
+    uploaded_file = st.file_uploader("Upload an audio file for analysis (WAV, MP3)", type=['wav', 'mp3'])
+    if uploaded_file is not None:
+        try:
+            # Read the uploaded audio file
+            audio_data, fs = sf.read(uploaded_file)
+            if len(audio_data.shape) > 1:
+                audio_data = audio_data[:, 0]  # Convert to mono
+            
+            st.success("✅ Audio file loaded successfully!")
+            
+            # Analyze the uploaded audio
+            with st.spinner("Analyzing your speech..."):
+                process_and_display_results(audio_data)
+                
+        except Exception as e:
+            st.error(f"❌ Error reading audio file: {str(e)}")
+
 # Recording and New Content buttons
 col1, col2 = st.columns(2)
 with col1:
@@ -1191,6 +1222,11 @@ with col1:
         """, unsafe_allow_html=True)
         
         # Start recording with visual feedback
+        if not SOUNDDEVICE_AVAILABLE:
+            st.error("❌ Audio recording is not available on this platform.")
+            st.info("💡 Please use the file upload option or deploy locally for full functionality.")
+            return
+        
         recording = sd.rec(int(rec_duration * fs), samplerate=fs, channels=1)
         
         # Real-time feedback during recording
