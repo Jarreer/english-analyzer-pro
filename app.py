@@ -1186,6 +1186,9 @@ with col1:
             key="professional_audio_recorder"
         )
         
+        # Initialize audio_data to None to prevent NameError
+        audio_data = None
+        
         if audio_file is not None:
             # Advanced audio processing for better quality
             try:
