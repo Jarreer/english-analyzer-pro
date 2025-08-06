@@ -1182,13 +1182,16 @@ else:
             except Exception as e:
                 st.error(f"❌ Error reading audio file: {str(e)}")
 
-# Microphone Recording Section
+# Import the custom audio recorder component
+from components.audio_recorder import create_audio_recorder_section
+
+# Professional Audio Recording Section
 col1, col2 = st.columns(2)
 with col1:
-    st.markdown("### 🎙️ Record Your Speech")
-    audio_file = st.audio_input("Click to record your speech", key="audio_recorder")
+    # Use the custom JavaScript-based audio recorder
+    audio_data = create_audio_recorder_section()
     
-    if audio_file is not None:
+    if audio_data is not None:
         # Clear previous content
         placeholder.empty()
         progress_placeholder.empty()
@@ -1197,13 +1200,13 @@ with col1:
         analysis_container = st.container()
         
         with analysis_container:
-            st.success("🎙️ **Recording Received!**")
-            st.info("🔄 **Starting Analysis...**")
+            st.success("🎙️ **High-Quality Recording Received!**")
+            st.info("🔄 **Starting Comprehensive Analysis...**")
 
-        with st.spinner("Analyzing your speech..."):
+        with st.spinner("Analyzing your speech with advanced AI..."):
             try:
                 # Show comprehensive analysis message
-                st.info("🔍 **Comprehensive Analysis in Progress**")
+                st.info("🔍 **Professional Speech Analysis in Progress**")
                 st.markdown("""
                 **Please wait 20-30 seconds** for our AI to analyze:
                 • 🎤 Pronunciation & accent detection
@@ -1216,21 +1219,14 @@ with col1:
                 
                 # Show progress steps
                 progress_bar = st.progress(0)
-                st.text("Step 1/5: Processing audio...")
+                st.text("Step 1/5: Processing professional audio...")
                 progress_bar.progress(20)
                 
-                # Read audio data from the uploaded file
-                audio_data, sample_rate = sf.read(audio_file)
-                
-                # Ensure audio is in the right format (mono, float32)
-                if len(audio_data.shape) > 1:
-                    audio_data = audio_data[:, 0]  # Take first channel if stereo
-                audio_data = audio_data.astype(np.float32)
-                
+                # Audio data is already processed and ready for analysis
                 process_and_display_results(audio_data)
                 
                 progress_bar.progress(100)
-                st.success("✅ **Analysis Complete!**")
+                st.success("✅ **Professional Analysis Complete!**")
                 
                 # Auto-advance content if enabled
                 if st.session_state.get("auto_advance", False):
@@ -1244,7 +1240,7 @@ with col1:
                     
             except Exception as e:
                 st.error(f"❌ Analysis failed: {str(e)}")
-                st.info("💡 Try recording again or check your microphone settings")
+                st.info("💡 Try recording again - the professional recorder ensures high quality audio")
 
 with col2:
     if st.button("🔄 New Content", key="new_content_button"):

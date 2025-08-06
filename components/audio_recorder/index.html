@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Audio Recorder</title>
+    <style>
+        .audio-recorder {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            margin: 10px 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .recorder-button {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: none;
+            background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(238, 90, 36, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 15px;
+        }
+
+        .recorder-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba(238, 90, 36, 0.6);
+        }
+
+        .recorder-button.recording {
+            background: linear-gradient(45deg, #ff4757, #c44569);
+            animation: pulse 1.5s infinite;
+        }
+
+        .recorder-button.processing {
+            background: linear-gradient(45deg, #3742fa, #2f3542);
+            cursor: not-allowed;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        .status-text {
+            color: white;
+            font-size: 16px;
+            font-weight: 500;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .timer {
+            color: #ffeaa7;
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .visualizer {
+            width: 200px;
+            height: 60px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .visualizer-bar {
+            width: 3px;
+            background: #00d2d3;
+            margin: 0 1px;
+            border-radius: 2px;
+            transition: height 0.1s ease;
+        }
+
+        .controls {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .control-btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .control-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .error-message {
+            color: #ff6b6b;
+            background: rgba(255, 107, 107, 0.1);
+            padding: 10px;
+            border-radius: 8px;
+            margin-top: 10px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="audio-recorder">
+        <div class="status-text" id="statusText">Click to start recording</div>
+        <div class="timer" id="timer" style="display: none;">00:00</div>
+        
+        <button class="recorder-button" id="recordButton">
+            <span id="buttonIcon">🎙️</span>
+        </button>
+        
+        <div class="visualizer" id="visualizer" style="display: none;">
+            <!-- Audio visualization bars will be added here -->
+        </div>
+        
+        <div class="controls">
+            <button class="control-btn" id="stopButton" style="display: none;">⏹️ Stop</button>
+            <button class="control-btn" id="resetButton" style="display: none;">🔄 Reset</button>
+        </div>
+        
+        <div class="error-message" id="errorMessage" style="display: none;"></div>
+    </div>
+
+    <script>
+        class AudioRecorder {
+            constructor() {
+                this.mediaRecorder = null;
+                this.audioChunks = [];
+                this.isRecording = false;
+                this.stream = null;
+                this.startTime = null;
+                this.timerInterval = null;
+                this.audioContext = null;
+                this.analyser = null;
+                this.dataArray = null;
+                this.animationId = null;
+                
+                this.initializeElements();
+                this.setupEventListeners();
+                this.createVisualizer();
+            }
+
+            initializeElements() {
+                this.recordButton = document.getElementById('recordButton');
+                this.stopButton = document.getElementById('stopButton');
+                this.resetButton = document.getElementById('resetButton');
+                this.statusText = document.getElementById('statusText');
+                this.timer = document.getElementById('timer');
+                this.buttonIcon = document.getElementById('buttonIcon');
+                this.visualizer = document.getElementById('visualizer');
+                this.errorMessage = document.getElementById('errorMessage');
+            }
+
+            setupEventListeners() {
+                this.recordButton.addEventListener('click', () => this.toggleRecording());
+                this.stopButton.addEventListener('click', () => this.stopRecording());
+                this.resetButton.addEventListener('click', () => this.resetRecorder());
+            }
+
+            createVisualizer() {
+                // Create visualization bars
+                for (let i = 0; i < 40; i++) {
+                    const bar = document.createElement('div');
+                    bar.className = 'visualizer-bar';
+                    bar.style.height = '5px';
+                    this.visualizer.appendChild(bar);
+                }
+            }
+
+            async toggleRecording() {
+                if (!this.isRecording) {
+                    await this.startRecording();
+                } else {
+                    this.stopRecording();
+                }
+            }
+
+            async startRecording() {
+                try {
+                    this.hideError();
+                    
+                    // Request microphone access
+                    this.stream = await navigator.mediaDevices.getUserMedia({
+                        audio: {
+                            echoCancellation: true,
+                            noiseSuppression: true,
+                            autoGainControl: true,
+                            sampleRate: 44100
+                        }
+                    });
+
+                    // Setup audio context for visualization
+                    this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                    const source = this.audioContext.createMediaStreamSource(this.stream);
+                    this.analyser = this.audioContext.createAnalyser();
+                    this.analyser.fftSize = 256;
+                    source.connect(this.analyser);
+                    this.dataArray = new Uint8Array(this.analyser.frequencyBinCount);
+
+                    // Setup MediaRecorder
+                    this.mediaRecorder = new MediaRecorder(this.stream, {
+                        mimeType: 'audio/webm;codecs=opus'
+                    });
+
+                    this.audioChunks = [];
+                    this.mediaRecorder.ondataavailable = (event) => {
+                        if (event.data.size > 0) {
+                            this.audioChunks.push(event.data);
+                        }
+                    };
+
+                    this.mediaRecorder.onstop = () => {
+                        this.processRecording();
+                    };
+
+                    // Start recording
+                    this.mediaRecorder.start(100); // Collect data every 100ms
+                    this.isRecording = true;
+                    this.startTime = Date.now();
+
+                    // Update UI
+                    this.updateUIForRecording();
+                    this.startTimer();
+                    this.startVisualization();
+
+                } catch (error) {
+                    this.showError('Microphone access denied or not available: ' + error.message);
+                }
+            }
+
+            stopRecording() {
+                if (this.mediaRecorder && this.isRecording) {
+                    this.mediaRecorder.stop();
+                    this.isRecording = false;
+                    
+                    // Stop all tracks
+                    if (this.stream) {
+                        this.stream.getTracks().forEach(track => track.stop());
+                    }
+                    
+                    // Stop audio context
+                    if (this.audioContext) {
+                        this.audioContext.close();
+                    }
+                    
+                    this.stopTimer();
+                    this.stopVisualization();
+                    this.updateUIForProcessing();
+                }
+            }
+
+            resetRecorder() {
+                this.audioChunks = [];
+                this.updateUIForIdle();
+                this.hideError();
+            }
+
+            async processRecording() {
+                try {
+                    // Create audio blob
+                    const audioBlob = new Blob(this.audioChunks, { type: 'audio/webm' });
+                    
+                    // Convert to base64 for sending to Streamlit
+                    const reader = new FileReader();
+                    reader.onloadend = () => {
+                        const base64Audio = reader.result.split(',')[1];
+                        
+                        // Send to Streamlit
+                        window.parent.postMessage({
+                            type: 'streamlit:componentReady',
+                            data: {
+                                audioData: base64Audio,
+                                mimeType: 'audio/webm',
+                                duration: (Date.now() - this.startTime) / 1000
+                            }
+                        }, '*');
+                        
+                        this.updateUIForComplete();
+                    };
+                    reader.readAsDataURL(audioBlob);
+                    
+                } catch (error) {
+                    this.showError('Error processing recording: ' + error.message);
+                    this.updateUIForIdle();
+                }
+            }
+
+            startTimer() {
+                this.timerInterval = setInterval(() => {
+                    const elapsed = Math.floor((Date.now() - this.startTime) / 1000);
+                    const minutes = Math.floor(elapsed / 60).toString().padStart(2, '0');
+                    const seconds = (elapsed % 60).toString().padStart(2, '0');
+                    this.timer.textContent = `${minutes}:${seconds}`;
+                }, 1000);
+            }
+
+            stopTimer() {
+                if (this.timerInterval) {
+                    clearInterval(this.timerInterval);
+                    this.timerInterval = null;
+                }
+            }
+
+            startVisualization() {
+                const visualize = () => {
+                    if (!this.isRecording) return;
+                    
+                    this.analyser.getByteFrequencyData(this.dataArray);
+                    const bars = this.visualizer.querySelectorAll('.visualizer-bar');
+                    
+                    for (let i = 0; i < bars.length; i++) {
+                        const value = this.dataArray[i * 2] || 0;
+                        const height = Math.max(5, (value / 255) * 50);
+                        bars[i].style.height = height + 'px';
+                    }
+                    
+                    this.animationId = requestAnimationFrame(visualize);
+                };
+                visualize();
+            }
+
+            stopVisualization() {
+                if (this.animationId) {
+                    cancelAnimationFrame(this.animationId);
+                    this.animationId = null;
+                }
+                
+                // Reset bars
+                const bars = this.visualizer.querySelectorAll('.visualizer-bar');
+                bars.forEach(bar => bar.style.height = '5px');
+            }
+
+            updateUIForRecording() {
+                this.recordButton.className = 'recorder-button recording';
+                this.buttonIcon.textContent = '⏸️';
+                this.statusText.textContent = 'Recording... Click to pause';
+                this.timer.style.display = 'block';
+                this.visualizer.style.display = 'flex';
+                this.stopButton.style.display = 'inline-block';
+                this.resetButton.style.display = 'none';
+            }
+
+            updateUIForProcessing() {
+                this.recordButton.className = 'recorder-button processing';
+                this.buttonIcon.textContent = '⏳';
+                this.statusText.textContent = 'Processing audio...';
+                this.visualizer.style.display = 'none';
+                this.stopButton.style.display = 'none';
+                this.resetButton.style.display = 'none';
+            }
+
+            updateUIForComplete() {
+                this.recordButton.className = 'recorder-button';
+                this.buttonIcon.textContent = '✅';
+                this.statusText.textContent = 'Recording complete! Analysis starting...';
+                this.timer.style.display = 'none';
+                this.resetButton.style.display = 'inline-block';
+            }
+
+            updateUIForIdle() {
+                this.recordButton.className = 'recorder-button';
+                this.buttonIcon.textContent = '🎙️';
+                this.statusText.textContent = 'Click to start recording';
+                this.timer.style.display = 'none';
+                this.visualizer.style.display = 'none';
+                this.stopButton.style.display = 'none';
+                this.resetButton.style.display = 'none';
+            }
+
+            showError(message) {
+                this.errorMessage.textContent = message;
+                this.errorMessage.style.display = 'block';
+            }
+
+            hideError() {
+                this.errorMessage.style.display = 'none';
+            }
+        }
+
+        // Initialize the audio recorder when the page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            new AudioRecorder();
+        });
+    </script>
+</body>
+</html>
