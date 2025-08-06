@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Professional Audio Recorder</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .recorder-container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            max-width: 400px;
+            width: 100%;
+        }
+
+        .recorder-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .status-display {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .status-text {
+            font-size: 16px;
+            color: #666;
+        }
+
+        .countdown {
+            font-size: 48px;
+            font-weight: bold;
+            color: #ff6b6b;
+            animation: pulse 1s infinite;
+        }
+
+        .recording-indicator {
+            font-size: 24px;
+            color: #e74c3c;
+            animation: blink 1s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0.3; }
+        }
+
+        .record-button {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: none;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+            margin: 20px 0;
+        }
+
+        .record-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 12px 30px rgba(102, 126, 234, 0.6);
+        }
+
+        .record-button:active {
+            transform: scale(0.95);
+        }
+
+        .record-button.recording {
+            background: linear-gradient(45deg, #e74c3c, #c0392b);
+            animation: pulse 1.5s infinite;
+        }
+
+        .record-button.processing {
+            background: linear-gradient(45deg, #95a5a6, #7f8c8d);
+            cursor: not-allowed;
+        }
+
+        .timer {
+            font-size: 20px;
+            font-weight: bold;
+            color: #333;
+            margin: 10px 0;
+        }
+
+        .visualizer {
+            height: 60px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            margin: 15px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .visualizer-bar {
+            width: 3px;
+            background: linear-gradient(to top, #667eea, #764ba2);
+            margin: 0 1px;
+            border-radius: 2px;
+            transition: height 0.1s ease;
+        }
+
+        .controls {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .control-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 25px;
+            background: #667eea;
+            color: white;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .control-btn:hover {
+            background: #5a67d8;
+            transform: translateY(-2px);
+        }
+
+        .error-message {
+            background: #fee;
+            color: #c53030;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 15px;
+            border-left: 4px solid #e53e3e;
+        }
+
+        .success-message {
+            background: #f0fff4;
+            color: #38a169;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 15px;
+            border-left: 4px solid #48bb78;
+        }
+    </style>
+</head>
+<body>
+    <div class="recorder-container">
+        <div class="recorder-title">🎙️ Professional Audio Recorder</div>
+        
+        <div class="status-display" id="statusDisplay">
+            <div class="status-text" id="statusText">Click the button to start recording</div>
+        </div>
+        
+        <button class="record-button" id="recordButton">🎙️</button>
+        
+        <div class="timer" id="timer" style="display: none;">00:00</div>
+        
+        <div class="visualizer" id="visualizer" style="display: none;">
+            <!-- Audio visualization bars will be added here -->
+        </div>
+        
+        <div class="controls" id="controls" style="display: none;">
+            <button class="control-btn" id="stopButton">⏹️ Stop</button>
+            <button class="control-btn" id="resetButton">🔄 Reset</button>
+        </div>
+        
+        <div id="messageArea"></div>
+    </div>
+
+    <script>
+        class ProfessionalAudioRecorder {
+            constructor() {
+                this.mediaRecorder = null;
+                this.audioChunks = [];
+                this.isRecording = false;
+                this.isPaused = false;
+                this.stream = null;
+                this.startTime = null;
+                this.timerInterval = null;
+                this.audioContext = null;
+                this.analyser = null;
+                this.dataArray = null;
+                this.animationId = null;
+                
+                this.initializeElements();
+                this.setupEventListeners();
+                this.createVisualizer();
+                this.setupStreamlitCommunication();
+            }
+
+            initializeElements() {
+                this.recordButton = document.getElementById('recordButton');
+                this.stopButton = document.getElementById('stopButton');
+                this.resetButton = document.getElementById('resetButton');
+                this.statusDisplay = document.getElementById('statusDisplay');
+                this.statusText = document.getElementById('statusText');
+                this.timer = document.getElementById('timer');
+                this.visualizer = document.getElementById('visualizer');
+                this.controls = document.getElementById('controls');
+                this.messageArea = document.getElementById('messageArea');
+            }
+
+            setupEventListeners() {
+                this.recordButton.addEventListener('click', () => this.handleRecordClick());
+                this.stopButton.addEventListener('click', () => this.stopRecording());
+                this.resetButton.addEventListener('click', () => this.resetRecorder());
+            }
+
+            setupStreamlitCommunication() {
+                // Listen for messages from Streamlit
+                window.addEventListener('message', (event) => {
+                    if (event.data.type === 'streamlit:componentReady') {
+                        this.sendToStreamlit({ type: 'ready' });
+                    }
+                });
+            }
+
+            sendToStreamlit(data) {
+                window.parent.postMessage({
+                    type: 'streamlit:componentValue',
+                    value: data
+                }, '*');
+            }
+
+            createVisualizer() {
+                // Create 50 visualization bars
+                for (let i = 0; i < 50; i++) {
+                    const bar = document.createElement('div');
+                    bar.className = 'visualizer-bar';
+                    bar.style.height = '5px';
+                    this.visualizer.appendChild(bar);
+                }
+            }
+
+            async handleRecordClick() {
+                if (!this.isRecording) {
+                    await this.startRecording();
+                } else if (!this.isPaused) {
+                    this.pauseRecording();
+                } else {
+                    this.resumeRecording();
+                }
+            }
+
+            async startRecording() {
+                try {
+                    this.showMessage('Requesting microphone access...', 'info');
+                    
+                    // Request high-quality audio stream
+                    this.stream = await navigator.mediaDevices.getUserMedia({
+                        audio: {
+                            echoCancellation: true,
+                            noiseSuppression: true,
+                            autoGainControl: true,
+                            sampleRate: 44100,
+                            channelCount: 1
+                        }
+                    });
+
+                    // Setup audio context for visualization
+                    this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                    const source = this.audioContext.createMediaStreamSource(this.stream);
+                    this.analyser = this.audioContext.createAnalyser();
+                    this.analyser.fftSize = 256;
+                    this.analyser.smoothingTimeConstant = 0.8;
+                    source.connect(this.analyser);
+                    this.dataArray = new Uint8Array(this.analyser.frequencyBinCount);
+
+                    // Setup MediaRecorder with optimal settings
+                    const options = {
+                        mimeType: 'audio/webm;codecs=opus',
+                        audioBitsPerSecond: 128000
+                    };
+                    
+                    // Fallback for browsers that don't support webm
+                    if (!MediaRecorder.isTypeSupported(options.mimeType)) {
+                        options.mimeType = 'audio/mp4';
+                    }
+                    
+                    this.mediaRecorder = new MediaRecorder(this.stream, options);
+                    this.audioChunks = [];
+
+                    this.mediaRecorder.ondataavailable = (event) => {
+                        if (event.data.size > 0) {
+                            this.audioChunks.push(event.data);
+                        }
+                    };
+
+                    this.mediaRecorder.onstop = () => {
+                        this.processRecording();
+                    };
+
+                    // Start countdown
+                    await this.showCountdown();
+                    
+                    // Start recording
+                    this.mediaRecorder.start(100); // Collect data every 100ms
+                    this.isRecording = true;
+                    this.startTime = Date.now();
+
+                    this.updateUIForRecording();
+                    this.startTimer();
+                    this.startVisualization();
+                    this.showMessage('Recording in progress... Speak clearly!', 'recording');
+
+                } catch (error) {
+                    this.showMessage(`Microphone access denied: ${error.message}`, 'error');
+                    console.error('Recording error:', error);
+                }
+            }
+
+            async showCountdown() {
+                return new Promise((resolve) => {
+                    this.statusText.textContent = 'Get ready...';
+                    
+                    let count = 3;
+                    const countdownInterval = setInterval(() => {
+                        this.statusDisplay.innerHTML = `<div class="countdown">${count}</div>`;
+                        count--;
+                        
+                        if (count < 0) {
+                            clearInterval(countdownInterval);
+                            this.statusDisplay.innerHTML = '<div class="recording-indicator">🔴 RECORDING NOW!</div>';
+                            resolve();
+                        }
+                    }, 1000);
+                });
+            }
+
+            pauseRecording() {
+                if (this.mediaRecorder && this.mediaRecorder.state === 'recording') {
+                    this.mediaRecorder.pause();
+                    this.isPaused = true;
+                    this.updateUIForPaused();
+                    this.showMessage('Recording paused', 'info');
+                }
+            }
+
+            resumeRecording() {
+                if (this.mediaRecorder && this.mediaRecorder.state === 'paused') {
+                    this.mediaRecorder.resume();
+                    this.isPaused = false;
+                    this.updateUIForRecording();
+                    this.showMessage('Recording resumed', 'recording');
+                }
+            }
+
+            stopRecording() {
+                if (this.mediaRecorder && this.isRecording) {
+                    this.mediaRecorder.stop();
+                    this.isRecording = false;
+                    this.isPaused = false;
+                    
+                    // Stop all tracks
+                    if (this.stream) {
+                        this.stream.getTracks().forEach(track => track.stop());
+                    }
+                    
+                    // Stop audio context
+                    if (this.audioContext) {
+                        this.audioContext.close();
+                    }
+                    
+                    this.stopTimer();
+                    this.stopVisualization();
+                    this.updateUIForProcessing();
+                    this.showMessage('Processing audio...', 'info');
+                }
+            }
+
+            async processRecording() {
+                try {
+                    // Create high-quality audio blob
+                    const mimeType = this.mediaRecorder.mimeType || 'audio/webm';
+                    const audioBlob = new Blob(this.audioChunks, { type: mimeType });
+                    
+                    // Convert to ArrayBuffer for better processing
+                    const arrayBuffer = await audioBlob.arrayBuffer();
+                    
+                    // Convert to base64 for transmission
+                    const base64Audio = btoa(String.fromCharCode(...new Uint8Array(arrayBuffer)));
+                    
+                    const duration = (Date.now() - this.startTime) / 1000;
+                    
+                    // Send high-quality audio data to Streamlit
+                    this.sendToStreamlit({
+                        type: 'audioRecorded',
+                        audioData: base64Audio,
+                        mimeType: mimeType,
+                        duration: duration,
+                        sampleRate: 44100,
+                        channels: 1,
+                        quality: 'high'
+                    });
+                    
+                    this.updateUIForComplete();
+                    this.showMessage(`Recording complete! Duration: ${duration.toFixed(1)}s`, 'success');
+                    
+                } catch (error) {
+                    this.showMessage(`Error processing recording: ${error.message}`, 'error');
+                    this.updateUIForIdle();
+                    console.error('Processing error:', error);
+                }
+            }
+
+            startTimer() {
+                this.timerInterval = setInterval(() => {
+                    const elapsed = Math.floor((Date.now() - this.startTime) / 1000);
+                    const minutes = Math.floor(elapsed / 60).toString().padStart(2, '0');
+                    const seconds = (elapsed % 60).toString().padStart(2, '0');
+                    this.timer.textContent = `${minutes}:${seconds}`;
+                }, 1000);
+            }
+
+            stopTimer() {
+                if (this.timerInterval) {
+                    clearInterval(this.timerInterval);
+                    this.timerInterval = null;
+                }
+            }
+
+            startVisualization() {
+                const visualize = () => {
+                    if (!this.isRecording || this.isPaused) return;
+                    
+                    this.analyser.getByteFrequencyData(this.dataArray);
+                    const bars = this.visualizer.querySelectorAll('.visualizer-bar');
+                    
+                    for (let i = 0; i < bars.length; i++) {
+                        const value = this.dataArray[Math.floor(i * this.dataArray.length / bars.length)] || 0;
+                        const height = Math.max(5, (value / 255) * 50);
+                        bars[i].style.height = height + 'px';
+                    }
+                    
+                    this.animationId = requestAnimationFrame(visualize);
+                };
+                visualize();
+            }
+
+            stopVisualization() {
+                if (this.animationId) {
+                    cancelAnimationFrame(this.animationId);
+                    this.animationId = null;
+                }
+                
+                // Reset bars
+                const bars = this.visualizer.querySelectorAll('.visualizer-bar');
+                bars.forEach(bar => bar.style.height = '5px');
+            }
+
+            updateUIForRecording() {
+                this.recordButton.className = 'record-button recording';
+                this.recordButton.textContent = '⏸️';
+                this.timer.style.display = 'block';
+                this.visualizer.style.display = 'flex';
+                this.controls.style.display = 'flex';
+            }
+
+            updateUIForPaused() {
+                this.recordButton.textContent = '▶️';
+                this.statusDisplay.innerHTML = '<div class="status-text">Recording paused - Click to resume</div>';
+            }
+
+            updateUIForProcessing() {
+                this.recordButton.className = 'record-button processing';
+                this.recordButton.textContent = '⏳';
+                this.statusDisplay.innerHTML = '<div class="status-text">Processing audio...</div>';
+                this.visualizer.style.display = 'none';
+                this.controls.style.display = 'none';
+            }
+
+            updateUIForComplete() {
+                this.recordButton.className = 'record-button';
+                this.recordButton.textContent = '✅';
+                this.statusDisplay.innerHTML = '<div class="status-text">Recording complete!</div>';
+                this.timer.style.display = 'none';
+            }
+
+            updateUIForIdle() {
+                this.recordButton.className = 'record-button';
+                this.recordButton.textContent = '🎙️';
+                this.statusDisplay.innerHTML = '<div class="status-text">Click the button to start recording</div>';
+                this.timer.style.display = 'none';
+                this.visualizer.style.display = 'none';
+                this.controls.style.display = 'none';
+            }
+
+            resetRecorder() {
+                this.audioChunks = [];
+                this.updateUIForIdle();
+                this.clearMessage();
+            }
+
+            showMessage(message, type) {
+                const messageClass = type === 'error' ? 'error-message' : 
+                                  type === 'success' ? 'success-message' : 
+                                  type === 'recording' ? 'recording-indicator' : 'status-text';
+                
+                this.messageArea.innerHTML = `<div class="${messageClass}">${message}</div>`;
+            }
+
+            clearMessage() {
+                this.messageArea.innerHTML = '';
+            }
+        }
+
+        // Initialize the recorder when the page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            new ProfessionalAudioRecorder();
+        });
+
+        // Handle Streamlit component lifecycle
+        window.addEventListener('load', () => {
+            window.parent.postMessage({ type: 'streamlit:componentReady' }, '*');
+        });
+    </script>
+</body>
+</html>

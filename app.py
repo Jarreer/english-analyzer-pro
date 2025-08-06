@@ -1146,149 +1146,65 @@ else:
 
 # No file upload - microphone only interface
 
-# Professional Microphone Recording Section
+# Import the professional audio recorder
+from streamlit_audio_recorder import create_professional_recorder
+
+# Professional Audio Recording Section
 col1, col2 = st.columns(2)
 with col1:
-    st.markdown("### 🎙️ Professional Audio Recorder")
-    st.markdown("*Click the microphone below to start recording*")
+    # Use the professional JavaScript-based audio recorder
+    audio_data = create_professional_recorder()
     
-    # Initialize session state for recording
-    if 'recording_started' not in st.session_state:
-        st.session_state.recording_started = False
-    if 'show_countdown' not in st.session_state:
-        st.session_state.show_countdown = False
-    
-    # Create recording interface with countdown
-    if st.button("🎙️ Start Recording", key="start_recording_pro", type="primary", use_container_width=True):
-        st.session_state.show_countdown = True
-        st.session_state.recording_started = True
-        
+    if audio_data is not None:
         # Clear previous content
         placeholder.empty()
         progress_placeholder.empty()
         
-        # Show countdown
-        countdown_container = st.empty()
-        countdown_container.info("🎤 Get ready to record...")
-        time.sleep(1)
+        # Create a dedicated analysis section
+        analysis_container = st.container()
         
-        for i in range(3, 0, -1):
-            countdown_container.markdown(f"""
-            <div style="
-                text-align: center; 
-                font-size: 48px; 
-                font-weight: bold; 
-                color: #ff6b6b; 
-                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
-                padding: 20px; 
-                border-radius: 15px; 
-                margin: 20px 0;
-                border: 3px solid #ff6b6b;
-                box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-            ">
-                {i}
-            </div>
-            """, unsafe_allow_html=True)
-            time.sleep(1)
-        
-        countdown_container.markdown("""
-        <div style="
-            text-align: center; 
-            font-size: 36px; 
-            font-weight: bold; 
-            color: #4ade80; 
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
-            padding: 20px; 
-            border-radius: 15px; 
-            margin: 20px 0;
-            border: 3px solid #4ade80;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-            animation: pulse 1.5s infinite;
-        ">
-            🔴 RECORDING NOW!
-        </div>
-        
-        <style>
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(1); }
-        }
-        </style>
-        """, unsafe_allow_html=True)
-        
-        st.session_state.show_countdown = False
-    
-    # Show audio input after countdown
-    if st.session_state.recording_started:
-        st.markdown("🎙️ **Recording in progress... Speak clearly into your microphone**")
-        audio_file = st.audio_input("Recording...", key="audio_recorder_main")
-        
-        if audio_file is not None:
-            # Reset recording state
-            st.session_state.recording_started = False
-            
-            # Clear previous content
-            placeholder.empty()
-            progress_placeholder.empty()
-            
-            # Create a dedicated analysis section
-            analysis_container = st.container()
-            
-            with analysis_container:
-                st.success("🎙️ **Recording Complete!**")
-                st.info("🔄 **Starting Comprehensive Analysis...**")
+        with analysis_container:
+            st.success("🎙️ **Professional Recording Complete!**")
+            st.info("🔄 **Starting Advanced AI Analysis...**")
 
-            with st.spinner("Analyzing your speech with advanced AI..."):
-                try:
-                    # Show comprehensive analysis message
-                    st.info("🔍 **Professional Speech Analysis in Progress**")
-                    st.markdown("""
-                    **Please wait 20-30 seconds** for our AI to analyze:
-                    • 🎤 Pronunciation & accent detection
-                    • 📝 Grammar & vocabulary assessment  
-                    • 😊 Speaking confidence & emotion
-                    • 🏆 IELTS band scoring
-                    • 💡 Advanced language features
-                    • 📊 Detailed performance metrics
-                    """)
+        with st.spinner("Analyzing your speech with advanced AI..."):
+            try:
+                # Show comprehensive analysis message
+                st.info("🔍 **Professional Speech Analysis in Progress**")
+                st.markdown("""
+                **Please wait 20-30 seconds** for our AI to analyze:
+                • 🎤 Pronunciation & accent detection
+                • 📝 Grammar & vocabulary assessment  
+                • 😊 Speaking confidence & emotion
+                • 🏆 IELTS band scoring
+                • 💡 Advanced language features
+                • 📊 Detailed performance metrics
+                """)
+                
+                # Show progress steps
+                progress_bar = st.progress(0)
+                st.text("Step 1/5: Processing professional-grade audio...")
+                progress_bar.progress(20)
+                
+                # Audio data is already processed and optimized for analysis
+                process_and_display_results(audio_data)
+                
+                progress_bar.progress(100)
+                st.success("✅ **Professional Analysis Complete!**")
+                
+                # Auto-advance content if enabled
+                if st.session_state.get("auto_advance", False):
+                    if st.session_state.exercise_mode and st.session_state.current_exercise:
+                        st.session_state.current_exercise = st.session_state.content_manager.get_interactive_exercise(
+                            st.session_state.current_exercise['type']
+                        )
+                    else:
+                        st.session_state.selected_sentence = st.session_state.content_manager.get_sentence_by_difficulty(st.session_state.current_difficulty)
+                        st.success("🔄 Content auto-advanced for next practice!")
                     
-                    # Show progress steps
-                    progress_bar = st.progress(0)
-                    st.text("Step 1/5: Processing audio...")
-                    progress_bar.progress(20)
-                    
-                    # Read and process audio data
-                    audio_data, sample_rate = sf.read(audio_file)
-                    
-                    # Ensure audio is in the right format (mono, float32)
-                    if len(audio_data.shape) > 1:
-                        audio_data = audio_data[:, 0]  # Take first channel if stereo
-                    audio_data = audio_data.astype(np.float32)
-                    
-                    # Normalize audio to prevent issues
-                    if np.max(np.abs(audio_data)) > 0:
-                        audio_data = audio_data / np.max(np.abs(audio_data)) * 0.8
-                    
-                    process_and_display_results(audio_data)
-                    
-                    progress_bar.progress(100)
-                    st.success("✅ **Analysis Complete!**")
-                    
-                    # Auto-advance content if enabled
-                    if st.session_state.get("auto_advance", False):
-                        if st.session_state.exercise_mode and st.session_state.current_exercise:
-                            st.session_state.current_exercise = st.session_state.content_manager.get_interactive_exercise(
-                                st.session_state.current_exercise['type']
-                            )
-                        else:
-                            st.session_state.selected_sentence = st.session_state.content_manager.get_sentence_by_difficulty(st.session_state.current_difficulty)
-                            st.success("🔄 Content auto-advanced for next practice!")
-                        
-                except Exception as e:
-                    st.error(f"❌ Analysis failed: {str(e)}")
-                    st.info("💡 Try recording again with clear speech")
-                    st.session_state.recording_started = False
+            except Exception as e:
+                st.error(f"❌ Analysis failed: {str(e)}")
+                st.info("💡 The professional recorder ensures high-quality audio - please try again")
 
 with col2:
     if st.button("🔄 New Content", key="new_content_button"):
