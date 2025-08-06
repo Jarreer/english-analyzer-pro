@@ -1182,102 +1182,22 @@ else:
             except Exception as e:
                 st.error(f"❌ Error reading audio file: {str(e)}")
 
-# Recording and New Content buttons
+# Microphone Recording Section
 col1, col2 = st.columns(2)
 with col1:
-    if st.button("🎙️ Start Recording", key="start_recording_button"):
+    st.markdown("### 🎙️ Record Your Speech")
+    audio_file = st.audio_input("Click to record your speech", key="audio_recorder")
+    
+    if audio_file is not None:
         # Clear previous content
         placeholder.empty()
         progress_placeholder.empty()
         
-        # Create countdown timer with single box display
-        countdown_container = st.container()
-        
-        # Countdown timer with single box
-        countdown_container.info("Get ready to record...")
-        time.sleep(1)
-        
-        # Single countdown box that updates
-        countdown_box = countdown_container.empty()
-        for i in range(3, 0, -1):
-            countdown_box.markdown(f"""
-            <div style="
-                text-align: center; 
-                font-size: 48px; 
-                font-weight: bold; 
-                color: #ff6b6b; 
-                background: #2d3748; 
-                padding: 20px; 
-                border-radius: 10px; 
-                margin: 20px 0;
-                border: 2px solid #ff6b6b;
-            ">
-                {i}
-            </div>
-            """, unsafe_allow_html=True)
-            time.sleep(1)
-        
-        # Clear the countdown box and show final message
-        countdown_box.empty()
-        countdown_container.markdown("""
-        <div style="
-            text-align: center; 
-            font-size: 36px; 
-            font-weight: bold; 
-            color: #4ade80; 
-            background: #064e3b; 
-            padding: 20px; 
-            border-radius: 10px; 
-            margin: 20px 0;
-            border: 2px solid #4ade80;
-        ">
-            RECORDING NOW!
-        </div>
-        """, unsafe_allow_html=True)
-        
-        # Start recording with visual feedback
-        if not SOUNDDEVICE_AVAILABLE:
-            st.error("❌ Audio recording is not available on this platform.")
-            st.info("💡 Please use the file upload option above or deploy locally for full functionality.")
-            st.stop()
-        
-        recording = sd.rec(int(rec_duration * fs), samplerate=fs, channels=1)
-        
-        # Real-time feedback during recording
-        for second in range(rec_duration):
-            # Create a visual progress indicator
-            progress = (second + 1) / rec_duration
-            progress_placeholder.progress(progress, text=f"Recording... {second + 1}s / {rec_duration}s")
-            
-            # Real-time volume monitoring
-            if second > 0:  # Start monitoring after first second
-                current_audio = recording[:int((second + 1) * fs)]
-                try:
-                    # Add bounds checking to prevent overflow
-                    audio_squared = np.clip(current_audio**2, 0, 1e6)
-                    volume_level = np.sqrt(np.mean(audio_squared))
-                except:
-                    volume_level = 0
-                
-                if volume_level < 0.01:
-                    progress_placeholder.warning("Speak louder!")
-                elif volume_level > 0.1:
-                    progress_placeholder.info("Good volume level")
-                else:
-                    progress_placeholder.success("Recording well!")
-            
-            time.sleep(1)
-        
-        sd.wait()
-        
-        # Clear countdown display
-        countdown_container.empty()
-
         # Create a dedicated analysis section
         analysis_container = st.container()
         
         with analysis_container:
-            st.success("🎙️ **Recording Complete!**")
+            st.success("🎙️ **Recording Received!**")
             st.info("🔄 **Starting Analysis...**")
 
         with st.spinner("Analyzing your speech..."):
@@ -1299,7 +1219,15 @@ with col1:
                 st.text("Step 1/5: Processing audio...")
                 progress_bar.progress(20)
                 
-                process_and_display_results(recording)
+                # Read audio data from the uploaded file
+                audio_data, sample_rate = sf.read(audio_file)
+                
+                # Ensure audio is in the right format (mono, float32)
+                if len(audio_data.shape) > 1:
+                    audio_data = audio_data[:, 0]  # Take first channel if stereo
+                audio_data = audio_data.astype(np.float32)
+                
+                process_and_display_results(audio_data)
                 
                 progress_bar.progress(100)
                 st.success("✅ **Analysis Complete!**")
@@ -1316,7 +1244,7 @@ with col1:
                     
             except Exception as e:
                 st.error(f"❌ Analysis failed: {str(e)}")
-                st.info("💡 Try speaking more clearly or check your microphone settings")
+                st.info("💡 Try recording again or check your microphone settings")
 
 with col2:
     if st.button("🔄 New Content", key="new_content_button"):
