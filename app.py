@@ -1146,14 +1146,137 @@ else:
 
 # No file upload - microphone only interface
 
-# Import the professional audio recorder
-from streamlit_audio_recorder import create_professional_recorder
-
-# Professional Audio Recording Section
+# Professional Audio Recording Section - Streamlit Cloud Compatible
 col1, col2 = st.columns(2)
 with col1:
-    # Use the professional JavaScript-based audio recorder
-    audio_data = create_professional_recorder()
+    st.markdown("### 🎙️ Professional Audio Recorder")
+    st.markdown("*High-quality browser-based recording optimized for Streamlit Cloud*")
+    
+    # Professional recording interface
+    with st.container():
+        # Add professional styling
+        st.markdown("""
+        <style>
+        .recording-container {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            margin: 10px 0;
+        }
+        .record-status {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 15px;
+            border-radius: 10px;
+            margin: 10px 0;
+            font-weight: bold;
+        }
+        </style>
+        """, unsafe_allow_html=True)
+        
+        # Recording status and instructions
+        st.markdown('<div class="recording-container">', unsafe_allow_html=True)
+        st.markdown('🎙️ **Ready to Record Professional Quality Audio**')
+        st.markdown('Click the audio recorder below to start')
+        st.markdown('</div>', unsafe_allow_html=True)
+        
+        # Use optimized st.audio_input with better processing
+        audio_file = st.audio_input(
+            "🎙️ Record your speech (optimized for quality)",
+            key="professional_audio_recorder"
+        )
+        
+        if audio_file is not None:
+            # Advanced audio processing for better quality
+            try:
+                # Read audio with high precision
+                audio_data, sample_rate = sf.read(audio_file, dtype='float64')
+                
+                # Advanced audio enhancement pipeline
+                if len(audio_data.shape) > 1:
+                    # Convert stereo to mono using weighted average
+                    audio_data = np.average(audio_data, axis=1, weights=[0.5, 0.5])
+                
+                # Resample to standard rate if needed
+                if sample_rate != 44100:
+                    from scipy import signal
+                    # High-quality resampling
+                    target_length = int(len(audio_data) * 44100 / sample_rate)
+                    audio_data = signal.resample(audio_data, target_length)
+                    sample_rate = 44100
+                
+                # Advanced noise reduction and enhancement
+                # Remove DC offset
+                audio_data = audio_data - np.mean(audio_data)
+                
+                # Apply gentle high-pass filter to remove low-frequency noise
+                from scipy.signal import butter, filtfilt
+                nyquist = sample_rate / 2
+                high_cutoff = 80 / nyquist  # 80 Hz high-pass
+                b, a = butter(2, high_cutoff, btype='high')
+                audio_data = filtfilt(b, a, audio_data)
+                
+                # Apply gentle low-pass filter to remove high-frequency noise
+                low_cutoff = 8000 / nyquist  # 8 kHz low-pass
+                b, a = butter(2, low_cutoff, btype='low')
+                audio_data = filtfilt(b, a, audio_data)
+                
+                # Dynamic range compression for consistent levels
+                # Soft compression to maintain naturalness
+                threshold = 0.3
+                ratio = 3.0
+                compressed_data = np.copy(audio_data)
+                
+                # Apply compression to loud parts
+                loud_mask = np.abs(audio_data) > threshold
+                compressed_data[loud_mask] = np.sign(audio_data[loud_mask]) * (
+                    threshold + (np.abs(audio_data[loud_mask]) - threshold) / ratio
+                )
+                
+                audio_data = compressed_data
+                
+                # Normalize to optimal level (80% of maximum)
+                if np.max(np.abs(audio_data)) > 0:
+                    audio_data = audio_data / np.max(np.abs(audio_data)) * 0.8
+                
+                # Convert to float32 for processing
+                audio_data = audio_data.astype(np.float32)
+                
+                # Display quality metrics
+                duration = len(audio_data) / sample_rate
+                st.success(f"✅ **Professional Audio Processing Complete!**")
+                
+                col_a, col_b, col_c = st.columns(3)
+                with col_a:
+                    st.metric("Duration", f"{duration:.2f}s")
+                with col_b:
+                    st.metric("Sample Rate", f"{sample_rate:,} Hz")
+                with col_c:
+                    st.metric("Quality", "Enhanced")
+                
+                # Show audio preview
+                st.audio(audio_file, format='audio/wav')
+                
+                audio_data = audio_data
+                
+            except ImportError:
+                # Fallback if scipy is not available
+                st.warning("📊 Advanced audio processing requires scipy - using standard processing")
+                audio_data, sample_rate = sf.read(audio_file)
+                
+                if len(audio_data.shape) > 1:
+                    audio_data = audio_data[:, 0]
+                audio_data = audio_data.astype(np.float32)
+                
+                # Basic normalization
+                if np.max(np.abs(audio_data)) > 0:
+                    audio_data = audio_data / np.max(np.abs(audio_data)) * 0.8
+                
+                st.info(f"🎙️ Audio processed: {len(audio_data)/sample_rate:.2f}s at {sample_rate}Hz")
+            
+            except Exception as e:
+                st.error(f"❌ Audio processing error: {str(e)}")
+                audio_data = None
     
     if audio_data is not None:
         # Clear previous content
